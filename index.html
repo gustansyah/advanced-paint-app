@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Paint App - Gustansyah Dwi Putra Sujanto</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header dengan Info Mahasiswa -->
+        <div class="student-info">
+            <h2>🎨 Advanced Paint Application</h2>
+            <div class="student-details">
+                <div class="student-name">Gustansyah Dwi Putra Sujanto</div>
+                <div class="student-id">123220210 | Kelas IF-A</div>
+                <div class="course-info">Grafika Komputer dan Multimedia</div>
+            </div>
+        </div>
+        
+        <!-- Main Toolbar -->
+        <div class="toolbar">
+            <div class="tool-group">
+                <label>Tools:</label>
+                <button id="brushTool" class="btn btn-primary active" title="Brush (B)">🖌️</button>
+                <button id="eraserTool" class="btn btn-secondary" title="Eraser (E)">🧽</button>
+                <button id="sprayTool" class="btn btn-secondary" title="Spray (S)">💨</button>
+                <button id="lineTool" class="btn btn-secondary" title="Line (L)">📏</button>
+                <button id="rectangleTool" class="btn btn-secondary" title="Rectangle (R)">⬜</button>
+                <button id="circleTool" class="btn btn-secondary" title="Circle (C)">⭕</button>
+                <button id="textTool" class="btn btn-secondary" title="Text (T)">📝</button>
+                <button id="eyedropperTool" class="btn btn-secondary" title="Eyedropper (I)">💧</button>
+            </div>
+            
+            <div class="tool-group">
+                <label>Warna:</label>
+                <input type="color" id="colorPicker" value="#000000">
+                <div class="color-palette">
+                    <div class="color-swatch" data-color="#000000" style="background: #000000"></div>
+                    <div class="color-swatch" data-color="#ff0000" style="background: #ff0000"></div>
+                    <div class="color-swatch" data-color="#00ff00" style="background: #00ff00"></div>
+                    <div class="color-swatch" data-color="#0000ff" style="background: #0000ff"></div>
+                    <div class="color-swatch" data-color="#ffff00" style="background: #ffff00"></div>
+                    <div class="color-swatch" data-color="#ff00ff" style="background: #ff00ff"></div>
+                    <div class="color-swatch" data-color="#00ffff" style="background: #00ffff"></div>
+                    <div class="color-swatch" data-color="#ffffff" style="background: #ffffff; border: 1px solid #ccc"></div>
+                </div>
+            </div>
+            
+            <div class="tool-group">
+                <label>Ukuran:</label>
+                <input type="range" id="brushSize" min="1" max="100" value="5">
+                <span class="size-display" id="sizeDisplay">5</span>
+            </div>
+            
+            <div class="tool-group">
+                <label>Opacity:</label>
+                <input type="range" id="opacitySlider" min="0.1" max="1" step="0.1" value="1">
+                <span class="size-display" id="opacityDisplay">100%</span>
+            </div>
+        </div>
+
+        <!-- Secondary Toolbar -->
+        <div class="toolbar secondary">
+            <div class="tool-group">
+                <button id="undoBtn" class="btn btn-info" title="Undo (Ctrl+Z)">↶ Undo</button>
+                <button id="redoBtn" class="btn btn-info" title="Redo (Ctrl+Y)">↷ Redo</button>
+            </div>
+            
+            <div class="tool-group">
+                <label>Brush Style:</label>
+                <select id="brushStyle">
+                    <option value="round">Round</option>
+                    <option value="square">Square</option>
+                    <option value="diamond">Diamond</option>
+                </select>
+            </div>
+            
+            <div class="tool-group">
+                <label>Fill:</label>
+                <input type="checkbox" id="fillShape"> Fill Shapes
+            </div>
+            
+            <div class="tool-group">
+                <button id="gridToggle" class="btn btn-secondary" title="Toggle Grid">📐 Grid</button>
+                <button id="zoomIn" class="btn btn-secondary" title="Zoom In">🔍+</button>
+                <button id="zoomOut" class="btn btn-secondary" title="Zoom Out">🔍-</button>
+                <button id="resetZoom" class="btn btn-secondary" title="Reset Zoom">🔍↻</button>
+            </div>
+            
+            <div class="tool-group">
+                <button id="clearCanvas" class="btn btn-danger">🗑️ Clear</button>
+                <button id="saveCanvas" class="btn btn-success">💾 Save PNG</button>
+                <button id="saveJPG" class="btn btn-success">💾 Save JPG</button>
+                <input type="file" id="loadImage" accept="image/*" style="display: none;">
+                <button id="loadBtn" class="btn btn-info">📁 Load</button>
+            </div>
+        </div>
+
+        <!-- Canvas Info -->
+        <div class="canvas-info">
+            <span>Canvas: <span id="canvasSize">900 x 600</span></span>
+            <span>Zoom: <span id="zoomLevel">100%</span></span>
+            <span>Mouse: <span id="mousePos">0, 0</span></span>
+        </div>
+        
+        <!-- Canvas Container -->
+        <div class="canvas-container" id="canvasContainer">
+            <canvas id="canvas" width="900" height="600"></canvas>
+            <canvas id="gridCanvas" width="900" height="600"></canvas>
+            <div id="textInput" class="text-input" style="display: none;">
+                <input type="text" id="textBox" placeholder="Enter text...">
+                <button id="confirmText">✓</button>
+                <button id="cancelText">✗</button>
+            </div>
+        </div>
+
+        <!-- Layers Panel -->
+        <div class="layers-panel">
+            <h3>Layers</h3>
+            <div class="layer-controls">
+                <button id="addLayer" class="btn btn-sm">+ Add</button>
+                <button id="deleteLayer" class="btn btn-sm btn-danger">Delete</button>
+            </div>
+            <div id="layersList">
+                <div class="layer-item active" data-layer="0">
+                    <span>Layer 1</span>
+                    <input type="range" class="layer-opacity" min="0" max="100" value="100">
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer dengan Info Mahasiswa -->
+        <div class="footer-info">
+            <div class="footer-content">
+                <span>© 2024 Gustansyah Dwi Putra Sujanto</span>
+                <span>|</span>
+                <span>123220210 - IF-A</span>
+                <span>|</span>
+                <span>Grafika Komputer dan Multimedia</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Keyboard Shortcuts Help -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Keyboard Shortcuts</h2>
+            <div class="shortcuts">
+                <div><kbd>B</kbd> - Brush Tool</div>
+                <div><kbd>E</kbd> - Eraser Tool</div>
+                <div><kbd>S</kbd> - Spray Tool</div>
+                <div><kbd>L</kbd> - Line Tool</div>
+                <div><kbd>R</kbd> - Rectangle Tool</div>
+                <div><kbd>C</kbd> - Circle Tool</div>
+                <div><kbd>T</kbd> - Text Tool</div>
+                <div><kbd>I</kbd> - Eyedropper Tool</div>
+                <div><kbd>Ctrl + Z</kbd> - Undo</div>
+                <div><kbd>Ctrl + Y</kbd> - Redo</div>
+                <div><kbd>Ctrl + S</kbd> - Save</div>
+                <div><kbd>+</kbd> - Zoom In</div>
+                <div><kbd>-</kbd> - Zoom Out</div>
+                <div><kbd>0</kbd> - Reset Zoom</div>
+                <div><kbd>G</kbd> - Toggle Grid</div>
+                <div><kbd>H</kbd> - Show/Hide Help</div>
+            </div>
+            <div class="modal-footer">
+                <p><strong>Dibuat oleh:</strong> Gustansyah Dwi Putra Sujanto (123220210) - IF-A</p>
+                <p><strong>Mata Kuliah:</strong> Grafika Komputer dan Multimedia</p>
+            </div>
+        </div>
+    </div>
+
+    <button id="helpBtn" class="help-btn" title="Help (H)">?</button>
+
+    <script src="script.js"></script>
+</body>
+</html>
